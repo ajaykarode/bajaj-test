@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Add your custom CSS styles here */
+    </style>
+</head>
+<body>
+    <input type="text" id="nameFilter" placeholder="Search by name">
+    <select id="designationFilter">
+        <option value="">All Designations</option>
+        <option value="Frontend Developer">Frontend Developer</option>
+        <option value="Backend Developer">Backend Developer</option>
+        <option value="Full Stack Developer">Full Stack Developer</option>
+        <option value="UI/UX Designer">UI/UX Designer</option>
+    </select>
+    <ul id="developersList"></ul>
+
+    <script>
+        // Fetch JSON data from the provided source
+        fetch('https://raw.githubusercontent.com/dixitsoham7/dixitsoham7.github.io/main/index.json')
+            .then(response => response.json())
+            .then(data => {
+                const developersList = document.getElementById('developersList');
+                const nameFilter = document.getElementById('nameFilter');
+                const designationFilter = document.getElementById('designationFilter');
+
+                // Function to render the developers based on the applied filters
+                function renderDevelopers() {
+                    const nameQuery = nameFilter.value.toLowerCase();
+                    const designationQuery = designationFilter.value.toLowerCase();
+                    developersList.innerHTML = '';
+
+                    data.forEach(developer => {
+                        const name = developer.name.toLowerCase();
+                        const designation = developer.designation.toLowerCase();
+
+                        if (name.includes(nameQuery) && (designationQuery === '' || designation === designationQuery)) {
+                            const listItem = document.createElement('li');
+                            listItem.textContent = `${developer.name} - ${developer.designation}`;
+                            developersList.appendChild(listItem);
+                        }
+                    });
+                }
+
+                // Add event listeners for the filters
+                nameFilter.addEventListener('input', renderDevelopers);
+                designationFilter.addEventListener('change', renderDevelopers);
+
+                // Initial rendering of the developers
+                renderDevelopers();
+            })
+            .catch(error => console.error(error));
+    </script>
+</body>
+</html>
